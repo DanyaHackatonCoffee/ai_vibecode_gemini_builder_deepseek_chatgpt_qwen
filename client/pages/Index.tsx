@@ -1,62 +1,87 @@
-import { DemoResponse } from "@shared/api";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function Index() {
-  const [exampleFromServer, setExampleFromServer] = useState("");
-  // Fetch users on component mount
-  useEffect(() => {
-    fetchDemo();
-  }, []);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [fileInputKey, setFileInputKey] = useState(0);
 
-  // Example of how to fetch data from the server (if needed)
-  const fetchDemo = async () => {
-    try {
-      const response = await fetch("/api/demo");
-      const data = (await response.json()) as DemoResponse;
-      setExampleFromServer(data.message);
-    } catch (error) {
-      console.error("Error fetching hello:", error);
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
     }
   };
 
+  const handleLogout = () => {
+    setSelectedFile(null);
+    setFileInputKey(prev => prev + 1);
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200">
-      <div className="text-center">
-        {/* TODO: FUSION_GENERATION_APP_PLACEHOLDER replace everything here with the actual app! */}
-        <h1 className="text-2xl font-semibold text-slate-800 flex items-center justify-center gap-3">
-          <svg
-            className="animate-spin h-8 w-8 text-slate-400"
-            viewBox="0 0 50 50"
+    <div className="flex min-h-screen bg-gradient-to-r from-white to-[#80A8FF]">
+      {/* Sidebar */}
+      <aside className="w-full md:w-[265px] flex flex-col justify-between p-4 md:p-6 border-r-0 md:border-r-2 border-black relative">
+        <div>
+          <h2 className="text-2xl md:text-[30px] font-medium leading-[110%] tracking-[-0.9px] text-center text-black font-raleway">
+            История анализа писем
+          </h2>
+        </div>
+        
+        <div className="text-center mt-8 md:mt-0">
+          <p className="text-lg md:text-xl font-medium leading-[110%] tracking-[-0.6px] text-black/75 mb-2 font-inter">
+            Вы вошли как Белкин Сергей Викторович.
+          </p>
+          <button 
+            onClick={handleLogout}
+            className="text-lg md:text-xl font-medium leading-[110%] tracking-[-0.6px] text-black font-inter hover:underline transition-all"
           >
-            <circle
-              className="opacity-30"
-              cx="25"
-              cy="25"
-              r="20"
-              stroke="currentColor"
-              strokeWidth="5"
-              fill="none"
+            Выйти
+          </button>
+        </div>
+      </aside>
+
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col items-center px-4 py-8 md:py-0">
+        {/* Title */}
+        <div className="w-full max-w-4xl text-center mt-4 md:mt-12">
+          <h1 className="text-3xl md:text-5xl lg:text-[50px] font-medium leading-[110%] tracking-[-1.5px] text-black font-raleway">
+            Банковский ассистент Захар
+          </h1>
+        </div>
+
+        {/* File Upload Section */}
+        <div className="w-full max-w-4xl mt-12 md:mt-24 flex flex-col items-center gap-8">
+          <div className="relative">
+            <input
+              key={fileInputKey}
+              type="file"
+              id="file-upload"
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+              onChange={handleFileSelect}
+              accept=".eml,.msg,.txt"
             />
-            <circle
-              className="text-slate-600"
-              cx="25"
-              cy="25"
-              r="20"
-              stroke="currentColor"
-              strokeWidth="5"
-              fill="none"
-              strokeDasharray="100"
-              strokeDashoffset="75"
-            />
-          </svg>
-          Generating your app...
-        </h1>
-        <p className="mt-4 text-slate-600 max-w-md">
-          Watch the chat on the left for updates that might need your attention
-          to finish generating
-        </p>
-        <p className="mt-4 hidden max-w-md">{exampleFromServer}</p>
-      </div>
+            <label
+              htmlFor="file-upload"
+              className="block w-[300px] sm:w-[400px] h-[82px] rounded-full bg-[#8FB8FF] shadow-[0_8px_4px_0_rgba(0,0,0,0.5)] flex items-center justify-center cursor-pointer hover:bg-[#7DA7EE] transition-all"
+            >
+              <span className="text-2xl md:text-[30px] font-semibold leading-[110%] tracking-[-0.9px] text-black font-raleway">
+                Выберите файл
+              </span>
+            </label>
+          </div>
+
+          <div className="text-center">
+            <p className="text-2xl md:text-[30px] font-medium leading-[110%] tracking-[-0.9px] text-black font-raleway">
+              {selectedFile ? selectedFile.name : "Файл не выбран"}
+            </p>
+          </div>
+
+          <div className="text-center max-w-xl">
+            <p className="text-2xl md:text-[30px] font-medium leading-[110%] tracking-[-0.9px] text-black font-raleway">
+              Результат обработки письма появится снизу.
+            </p>
+          </div>
+        </div>
+      </main>
     </div>
   );
 }
