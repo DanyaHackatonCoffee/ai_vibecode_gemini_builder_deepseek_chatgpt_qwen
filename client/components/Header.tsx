@@ -8,11 +8,11 @@ export default function Header() {
           <img
             src="https://api.builder.io/api/v1/image/assets/TEMP/9815e7ff7ef2932dfbdf8b03f9d7b98a01936c3f?width=498"
             alt="ПСБ"
-            className="h-[97px] w-auto"
+            className="h-[60px] md:h-[97px] w-auto"
           />
         </Link>
 
-        <nav className="flex items-center gap-10">
+        <nav className="hidden md:flex items-center gap-10">
           <Link
             to="/chat"
             className="text-black text-base font-medium font-inter leading-[145%] tracking-[-0.08px] capitalize hover:underline transition-all"
@@ -32,6 +32,13 @@ export default function Header() {
             Войти
           </Link>
         </nav>
+
+        <Link
+          to="/chat"
+          className="md:hidden text-black text-sm font-medium font-inter hover:underline transition-all"
+        >
+          Чат
+        </Link>
       </div>
     </header>
   );
